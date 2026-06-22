@@ -5,13 +5,20 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
+      "@components":   ["src/components/index.ts"],
       "@components/*": ["src/components/*"],
+      "@navigation":   ["src/navigation/index.ts"],
       "@navigation/*": ["src/navigation/*"],
       "@screens/*":    ["src/screens/*"],
+      "@store":        ["src/store/index.ts"],
       "@store/*":      ["src/store/*"],
+      "@theme":        ["src/theme/index.ts"],
       "@theme/*":      ["src/theme/*"],
+      "@types":        ["src/types/index.ts"],
       "@types/*":      ["src/types/*"],
+      "@utils":        ["src/utils/index.ts"],
       "@utils/*":      ["src/utils/*"],
+      "@api":          ["src/api/index.ts"],
       "@api/*":        ["src/api/*"]
     }
   }
