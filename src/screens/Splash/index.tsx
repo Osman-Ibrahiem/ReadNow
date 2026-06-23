@@ -1,10 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Colors } from '@theme';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@navigation/types';
 
 const SplashScreen = () => {
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.8)).current;
+  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList, 'Splash'>>();
 
   useEffect(() => {
     Animated.parallel([
@@ -18,8 +22,10 @@ const SplashScreen = () => {
         duration: 1000,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, []);
+    ]).start(() => {
+      navigation.navigate('Login');
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
