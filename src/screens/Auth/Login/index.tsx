@@ -12,8 +12,30 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
+  const validate = () => {
+    const newErrors: { email?: string; password?: string } = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!emailRegex.test(email.trim())) {
+      newErrors.email = 'Enter a valid email address';
+    }
+
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSignIn = () => {
+    if (!validate()) return;
     console.log('Sign in pressed', { email, password });
   };
 
@@ -41,28 +63,43 @@ const LoginScreen = () => {
         <View style={styles.fieldGroup}>
           <Text style={styles.label}>Email</Text>
           <TextInput
-            style={[styles.input, isEmailFocused && styles.inputFocused]}
+            style={[
+              styles.input,
+              isEmailFocused && styles.inputFocused,
+              errors.email && styles.inputError,
+            ]}
             placeholder="Your Email"
             placeholderTextColor={Colors.placeholder}
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => {
+              setEmail(text);
+              if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+            }}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
             onFocus={() => setIsEmailFocused(true)}
             onBlur={() => setIsEmailFocused(false)}
           />
+          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
         </View>
 
         <View style={styles.fieldGroup}>
           <Text style={styles.label}>Password</Text>
           <View style={styles.passwordWrapper}>
             <TextInput
-              style={[styles.passwordInput, isPasswordFocused && styles.inputFocused]}
+              style={[
+                styles.passwordInput,
+                isPasswordFocused && styles.inputFocused,
+                errors.password && styles.inputError,
+              ]}
               placeholder="Your Password"
               placeholderTextColor={Colors.placeholder}
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(text) => {
+                setPassword(text);
+                if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+              }}
               secureTextEntry={!showPassword}
               autoCapitalize="none"
               onFocus={() => setIsPasswordFocused(true)}
@@ -80,6 +117,7 @@ const LoginScreen = () => {
               />
             </TouchableOpacity>
           </View>
+          {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
         </View>
       </View>
 
@@ -247,5 +285,13 @@ const styles = StyleSheet.create({
   googleButtonText: {
     fontSize: 14,
     color: Colors.textSecondary,
+  },
+  inputError: {
+    borderColor: Colors.error,
+  },
+  errorText: {
+    fontSize: 12,
+    color: Colors.error,
+    marginTop: Spacing.xs,
   },
 });
