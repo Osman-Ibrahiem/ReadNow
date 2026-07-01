@@ -1,15 +1,23 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import type { TabParamList } from './types';
 import { Colors, Typography } from '@theme';
 
-import ListScreen from '@screens/List';
+import ListNavigator from './ListNavigator';
 import ProfileScreen from '@screens/Profile';
 import SettingsScreen from '@screens/Settings';
 
 const Tab = createBottomTabNavigator<TabParamList>();
+
+const tabBarStyle = {
+  height: 75,
+  borderTopWidth: 0.5,
+  borderTopColor: Colors.border,
+  paddingTop: 8,
+};
 
 const TabNavigator = () => (
   <Tab.Navigator
@@ -31,10 +39,14 @@ const TabNavigator = () => (
   >
     <Tab.Screen
       name="ListTab"
-      component={ListScreen}
-      options={{
-        title: 'Home',
-        tabBarIcon: ({ color }) => <MaterialIcons name="home" size={22} color={color} />,
+      component={ListNavigator}
+      options={({ route }) => {
+        const focusedRoute = getFocusedRouteNameFromRoute(route) ?? 'ListScreen';
+        return {
+          title: 'Home',
+          tabBarIcon: ({ color }) => <MaterialIcons name="home" size={22} color={color} />,
+          tabBarStyle: focusedRoute === 'ArticleDetails' ? { display: 'none' } : tabBarStyle,
+        };
       }}
     />
     <Tab.Screen

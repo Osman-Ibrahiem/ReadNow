@@ -16,6 +16,9 @@ import { useAuthStore } from '@store';
 import type { Article } from '@types';
 import { CATEGORIES, ARTICLES } from './mockData';
 import ArticleCard from './ArticleCard';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { ListStackParamList } from '@navigation/types';
 
 const CATEGORY_FILTER_MAP: Record<string, string> = {
   Tech: 'Technology',
@@ -24,7 +27,10 @@ const CATEGORY_FILTER_MAP: Record<string, string> = {
   Sports: 'Sports',
 };
 
+type ListScreenNavigationProp = NativeStackNavigationProp<ListStackParamList, 'ListScreen'>;
+
 const ListScreen = () => {
+  const navigation = useNavigation<ListScreenNavigationProp>();
   const userName = useAuthStore((state) => state.user?.name) ?? 'there';
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<(typeof CATEGORIES)[number]>('All');
@@ -46,7 +52,10 @@ const ListScreen = () => {
   }, [selectedCategory, searchQuery]);
 
   const renderItem = ({ item }: { item: Article }) => (
-    <ArticleCard article={item} onPress={() => { }} />
+    <ArticleCard
+      article={item}
+      onPress={() => navigation.navigate('ArticleDetails', { articleId: item.id })}
+    />
   );
 
   return (
