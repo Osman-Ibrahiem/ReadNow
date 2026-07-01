@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { Colors, Typography, Spacing } from '@theme';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@navigation/types';
 
 const SplashScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList, 'Splash'>>();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate('Login');
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <Image
