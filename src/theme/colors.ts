@@ -7,9 +7,13 @@ export const Colors = {
   background: '#FFFFFF',
   surface: '#F8F9FA',
 
-  // Text
+  // Text (on light backgrounds)
   text: '#0F1729',
   textSecondary: '#6B7280',
+
+  // Text (on dark backgrounds, e.g. Splash)
+  textInverse: '#FFFFFF',
+  textInverseMuted: 'rgba(255, 255, 255, 0.38)',
 
   // UI
   border: '#E5E7EB',
