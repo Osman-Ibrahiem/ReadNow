@@ -7,9 +7,9 @@ export const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
     Sports: { bg: '#FFF7ED', text: '#C2410C' },
 };
 
-export const CATEGORIES = ['All', 'Tech', 'Business', 'Sports'] as const;
+export const CATEGORIES = ['All', 'Tech', 'Business', 'Science', 'Sports'] as const;
 
-export const MOCK_ARTICLES: Article[] = [
+export const ARTICLES: Article[] = [
     {
         id: '1',
         title: 'Apple unveils new AI features coming to iOS 19',

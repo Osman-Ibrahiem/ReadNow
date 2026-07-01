@@ -1,14 +1,15 @@
-// src/screens/List/index.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors, Typography, Spacing } from '@theme';
 import { useAuthStore } from '@store';
+import { CATEGORIES } from './mockData';
 
 const ListScreen = () => {
   const userName = useAuthStore((state) => state.user?.name) ?? 'there';
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<(typeof CATEGORIES)[number]>('All');
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -36,6 +37,26 @@ const ListScreen = () => {
           onChangeText={setSearchQuery}
           returnKeyType="search"
         />
+      </View>
+
+      <View style={styles.categoryRow}>
+        {CATEGORIES.map((category) => {
+          const isSelected = category === selectedCategory;
+          return (
+            <TouchableOpacity
+              key={category}
+              style={[styles.categoryChip, isSelected && styles.categoryChipSelected]}
+              onPress={() => setSelectedCategory(category)}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={[styles.categoryChipText, isSelected && styles.categoryChipTextSelected]}
+              >
+                {category}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </SafeAreaView>
   );
@@ -96,5 +117,33 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.text,
     padding: 0,
+  },
+  categoryRow: {
+    flexDirection: 'row',
+    paddingHorizontal: Spacing.md,
+    marginTop: Spacing.md,
+    gap: Spacing.sm,
+  },
+  categoryChip: {
+    height: 26,
+    paddingHorizontal: Spacing.sm + 2,
+    borderRadius: 13,
+    borderWidth: 0.5,
+    borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryChipSelected: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  categoryChipText: {
+    fontSize: 11,
+    color: Colors.textSecondary,
+  },
+  categoryChipTextSelected: {
+    color: Colors.white,
+    fontWeight: '500',
   },
 });
