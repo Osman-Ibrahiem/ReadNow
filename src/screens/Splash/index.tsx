@@ -9,8 +9,11 @@ import { useAuthStore } from '@store';
 const SplashScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Splash'>>();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
 
   useEffect(() => {
+    if (!hasHydrated) return;
+
     const timer = setTimeout(() => {
       navigation.reset({
         index: 0,
@@ -19,7 +22,7 @@ const SplashScreen = () => {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [navigation, isAuthenticated]);
+  }, [navigation, isAuthenticated, hasHydrated]);
 
   return (
     <View style={styles.container}>
