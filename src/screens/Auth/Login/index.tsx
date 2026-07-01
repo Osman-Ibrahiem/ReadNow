@@ -1,9 +1,17 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography, Spacing } from '@theme';
 
+const eyeIcon = require('../../../../assets/icons/password-eye.png');
+
 const LoginScreen = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>
@@ -18,6 +26,52 @@ const LoginScreen = () => {
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Welcome back</Text>
         <Text style={styles.subtitle}>Sign in to continue reading</Text>
+      </View>
+
+      <View style={styles.formContainer}>
+        <View style={styles.fieldGroup}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={[styles.input, isEmailFocused && styles.inputFocused]}
+            placeholder="Your Email"
+            placeholderTextColor={Colors.textSecondary}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onFocus={() => setIsEmailFocused(true)}
+            onBlur={() => setIsEmailFocused(false)}
+          />
+        </View>
+
+        <View style={styles.fieldGroup}>
+          <Text style={styles.label}>Password</Text>
+          <View style={styles.passwordWrapper}>
+            <TextInput
+              style={[styles.passwordInput, isPasswordFocused && styles.inputFocused]}
+              placeholder="Your Password"
+              placeholderTextColor={Colors.textSecondary}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              autoCapitalize="none"
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+            />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword((prev) => !prev)}
+              hitSlop={8}
+            >
+              <Image
+                source={showPassword ? eyeIcon : eyeIcon}
+                style={styles.eyeIconImage}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -56,5 +110,55 @@ const styles = StyleSheet.create({
     ...Typography.body,
     color: Colors.textSecondary,
     marginTop: Spacing.xs + 2,
+  },
+  formContainer: {
+    marginTop: Spacing.xl + Spacing.md,
+    paddingHorizontal: Spacing.lg,
+  },
+  fieldGroup: {
+    marginBottom: Spacing.lg,
+  },
+  label: {
+    ...Typography.bodySmall,
+    fontWeight: '500',
+    color: Colors.textSecondary,
+    marginBottom: Spacing.sm,
+  },
+  input: {
+    height: 48,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    paddingHorizontal: Spacing.md,
+    fontSize: 14,
+    color: Colors.text,
+  },
+  passwordWrapper: {
+    justifyContent: 'center',
+  },
+  passwordInput: {
+    height: 48,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    paddingHorizontal: Spacing.md,
+    paddingRight: 44,
+    fontSize: 14,
+    color: Colors.text,
+  },
+  inputFocused: {
+    borderColor: Colors.primary,
+    borderWidth: 1.5,
+    backgroundColor: Colors.background,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: Spacing.md,
+  },
+  eyeIconImage: {
+    width: 20,
+    height: 20,
   },
 });
