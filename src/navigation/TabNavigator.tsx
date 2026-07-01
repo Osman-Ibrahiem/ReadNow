@@ -18,7 +18,7 @@ const TabNavigator = () => (
       tabBarActiveTintColor: Colors.text,
       tabBarInactiveTintColor: Colors.tabInactive,
       tabBarStyle: {
-        height: 64,
+        height: 75,
         borderTopWidth: 0.5,
         borderTopColor: Colors.border,
         paddingTop: 8,
