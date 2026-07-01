@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography, Spacing } from '@theme';
+import { useAuthStore } from '@store';
 
 const eyeIcon = require('../../../../assets/icons/password-eye.png');
 const googleIcon = require('../../../../assets/icons/google.png');
@@ -13,6 +14,7 @@ const LoginScreen = () => {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const login = useAuthStore((state) => state.login);
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -37,6 +39,7 @@ const LoginScreen = () => {
   const handleSignIn = () => {
     if (!validate()) return;
     console.log('Sign in pressed', { email, password });
+    login({ id: '1', email, name: 'Osman' });
   };
 
   const handleGoogleSignIn = () => {
