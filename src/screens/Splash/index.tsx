@@ -1,37 +1,30 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
-import { Colors } from '@theme';
+import React, { useEffect } from 'react';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { Colors, Typography, Spacing } from '@theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@navigation/types';
 
 const SplashScreen = () => {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.8)).current;
   const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList, 'Splash'>>();
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scale, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
+    const timer = setTimeout(() => {
       navigation.navigate('Login');
-    });
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
     <View style={styles.container}>
-      <Animated.View style={{ opacity, transform: [{ scale }] }}>
-        <Text style={styles.text}>ReadNow</Text>
-      </Animated.View>
+      <Image
+        source={require('../../../assets/images/logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+      <Text style={styles.title}>ReadNow</Text>
+      <Text style={styles.subtitle}>Stay informed, every moment</Text>
     </View>
   );
 };
@@ -45,9 +38,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: Colors.white,
+  logo: {
+    width: 80,
+    height: 80,
+    marginBottom: Spacing.lg,
+  },
+  title: {
+    ...Typography.display,
+    color: Colors.textInverse,
+  },
+  subtitle: {
+    ...Typography.body,
+    color: Colors.textInverseMuted,
+    marginTop: Spacing.sm,
   },
 });

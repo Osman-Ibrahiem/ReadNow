@@ -1,32 +1,27 @@
 export const Colors = {
   // Brand
-  primary:      '#6366F1',
-  primaryLight: '#EEF2FF',
-  primaryDark:  '#4F46E5',
+  primary: '#0F1729', // Navy
+  accent: '#F5A623', // Amber
 
   // Background
-  background: '#F8F9FA',
-  surface:    '#FFFFFF',
+  background: '#FFFFFF',
+  surface: '#F8F9FA',
 
-  // Text
-  text:          '#1A1A2E',
+  // Text (on light backgrounds)
+  text: '#0F1729',
   textSecondary: '#6B7280',
-  textLight:     '#9CA3AF',
+
+  // Text (on dark backgrounds, e.g. Splash)
+  textInverse: '#FFFFFF',
+  textInverseMuted: 'rgba(255, 255, 255, 0.38)',
 
   // UI
-  border:  '#E5E7EB',
-  divider: '#F3F4F6',
+  border: '#E5E7EB',
 
   // Status
   success: '#10B981',
-  error:   '#EF4444',
+  error: '#EF4444',
   warning: '#F59E0B',
-  info:    '#3B82F6',
-
-  // Tab bar
-  tabBar:         '#FFFFFF',
-  tabBarActive:   '#6366F1',
-  tabBarInactive: '#9CA3AF',
 
   white: '#FFFFFF',
   black: '#000000',
