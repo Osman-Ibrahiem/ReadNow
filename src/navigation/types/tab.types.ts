@@ -2,7 +2,7 @@ import type { NavigatorScreenParams } from '@react-navigation/native';
 
 export type ListStackParamList = {
   ListScreen: undefined;
-  ItemDetail: { itemId: string };
+  ArticleDetails: { articleId: string };
 };
 
 export type TabParamList = {
