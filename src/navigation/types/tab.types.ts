@@ -6,7 +6,7 @@ export type ListStackParamList = {
 };
 
 export type TabParamList = {
-  ListTab:  NavigatorScreenParams<ListStackParamList>;
-  Profile:  undefined;
+  ListTab: NavigatorScreenParams<ListStackParamList>;
+  Profile: undefined;
   Settings: undefined;
 };
