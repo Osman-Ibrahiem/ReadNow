@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@navigation/types';
 import { Colors, Typography, Spacing } from '@theme';
 import { useAuthStore } from '@store';
 
@@ -8,12 +12,14 @@ const eyeIcon = require('../../../../assets/icons/password-eye.png');
 const googleIcon = require('../../../../assets/icons/google.png');
 
 const LoginScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Auth'>>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const login = useAuthStore((state) => state.login);
 
   const validate = () => {
@@ -38,8 +44,16 @@ const LoginScreen = () => {
 
   const handleSignIn = () => {
     if (!validate()) return;
-    console.log('Sign in pressed', { email, password });
-    login({ id: '1', email, name: 'Osman' });
+
+    setIsSubmitting(true);
+
+    setTimeout(() => {
+      login({ id: '1', email, name: 'Osman' });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
+    }, 3000);
   };
 
   const handleGoogleSignIn = () => {
@@ -125,11 +139,16 @@ const LoginScreen = () => {
       </View>
 
       <TouchableOpacity
-        style={styles.signInButton}
+        style={[styles.signInButton, isSubmitting && styles.signInButtonDisabled]}
         activeOpacity={0.8}
         onPress={handleSignIn}
+        disabled={isSubmitting}
       >
-        <Text style={styles.signInButtonText}>Sign in</Text>
+        {isSubmitting ? (
+          <ActivityIndicator color={Colors.text} />
+        ) : (
+          <Text style={styles.signInButtonText}>Sign in</Text>
+        )}
       </TouchableOpacity>
 
       <View style={styles.dividerContainer}>
@@ -142,6 +161,7 @@ const LoginScreen = () => {
         style={styles.googleButton}
         activeOpacity={0.8}
         onPress={handleGoogleSignIn}
+        disabled={isSubmitting}
       >
         <Image
           source={googleIcon}
@@ -246,6 +266,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  signInButtonDisabled: {
+    opacity: 0.7,
   },
   signInButtonText: {
     fontSize: 16,
