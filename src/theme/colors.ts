@@ -18,6 +18,7 @@ export const Colors = {
   // UI
   border: '#E5E7EB',
   placeholder: '#9CA3AF',
+  tabInactive: '#B0B7C3',
 
   // Status
   success: '#10B981',
