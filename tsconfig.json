@@ -31,10 +31,10 @@
       "@theme/*": [
         "src/theme/*"
       ],
-      "@types": [
+      "@app-types": [
         "src/types/index.ts"
       ],
-      "@types/*": [
+      "@app-types/*": [
         "src/types/*"
       ],
       "@utils": [
