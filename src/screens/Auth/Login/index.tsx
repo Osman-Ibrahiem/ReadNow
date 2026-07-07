@@ -10,6 +10,7 @@ import { useAuthStore } from '@store';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { loginRequest } from '@api/auth';
+import Toast from 'react-native-toast-message';
 
 const eyeIcon = require('../../../../assets/icons/password-eye.png');
 const googleIcon = require('../../../../assets/icons/google.png');
@@ -22,7 +23,6 @@ const LoginScreen = () => {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [apiError, setApiError] = useState('');
   const login = useAuthStore((state) => state.login);
 
   const validate = () => {
@@ -55,17 +55,22 @@ const LoginScreen = () => {
       });
     },
     onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.data?.error) {
-        setApiError(error.response.data.error);
-      } else {
-        setApiError('Something went wrong. Please try again.');
-      }
+      const message =
+        axios.isAxiosError(error) && error.response?.data?.error
+          ? error.response.data.error
+          : 'Something went wrong. Please try again.';
+
+      Toast.show({
+        type: 'error',
+        text1: 'Sign in failed',
+        text2: message,
+        position: 'top',
+      });
     },
   });
 
   const handleSignIn = () => {
     if (!validate()) return;
-    setApiError('');
     loginMutation.mutate({ email, password });
   };
 
@@ -150,8 +155,6 @@ const LoginScreen = () => {
           {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
         </View>
       </View>
-
-      {apiError ? <Text style={styles.apiErrorText}>{apiError}</Text> : null}
 
       <TouchableOpacity
         style={[styles.signInButton, loginMutation.isPending && styles.signInButtonDisabled]}
