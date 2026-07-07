@@ -7,6 +7,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/types';
 import { Colors, Typography, Spacing } from '@theme';
 import { useAuthStore } from '@store';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { loginRequest } from '@api/auth';
+import Toast from 'react-native-toast-message';
 
 const eyeIcon = require('../../../../assets/icons/password-eye.png');
 const googleIcon = require('../../../../assets/icons/google.png');
@@ -19,7 +23,6 @@ const LoginScreen = () => {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const login = useAuthStore((state) => state.login);
 
   const validate = () => {
@@ -42,18 +45,33 @@ const LoginScreen = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSignIn = () => {
-    if (!validate()) return;
-
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      login({ id: '1', email, name: 'Osman' });
+  const loginMutation = useMutation({
+    mutationFn: loginRequest,
+    onSuccess: (data) => {
+      login(data.user);
       navigation.reset({
         index: 0,
         routes: [{ name: 'Main' }],
       });
-    }, 3000);
+    },
+    onError: (error) => {
+      const message =
+        axios.isAxiosError(error) && error.response?.data?.error
+          ? error.response.data.error
+          : 'Something went wrong. Please try again.';
+
+      Toast.show({
+        type: 'error',
+        text1: 'Sign in failed',
+        text2: message,
+        position: 'top',
+      });
+    },
+  });
+
+  const handleSignIn = () => {
+    if (!validate()) return;
+    loginMutation.mutate({ email, password });
   };
 
   const handleGoogleSignIn = () => {
@@ -139,12 +157,12 @@ const LoginScreen = () => {
       </View>
 
       <TouchableOpacity
-        style={[styles.signInButton, isSubmitting && styles.signInButtonDisabled]}
+        style={[styles.signInButton, loginMutation.isPending && styles.signInButtonDisabled]}
         activeOpacity={0.8}
         onPress={handleSignIn}
-        disabled={isSubmitting}
+        disabled={loginMutation.isPending}
       >
-        {isSubmitting ? (
+        {loginMutation.isPending ? (
           <ActivityIndicator color={Colors.text} />
         ) : (
           <Text style={styles.signInButtonText}>Sign in</Text>
@@ -161,7 +179,7 @@ const LoginScreen = () => {
         style={styles.googleButton}
         activeOpacity={0.8}
         onPress={handleGoogleSignIn}
-        disabled={isSubmitting}
+        disabled={loginMutation.isPending}
       >
         <Image
           source={googleIcon}
@@ -319,5 +337,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.error,
     marginTop: Spacing.xs,
+  },
+  apiErrorText: {
+    fontSize: 13,
+    color: Colors.error,
+    textAlign: 'center',
+    marginTop: Spacing.sm,
+    marginHorizontal: Spacing.lg,
   },
 });
